@@ -1,0 +1,35 @@
+#!/bin/bash
+
+# MangaToPdf v1.0.1
+
+mkdir -p convert
+for d in */ 
+do
+	# folders
+	if [ "$d" != "convert/" ]
+	then
+		echo "Processing ${d::-1}"
+		command="convert "
+	
+		for i in `ls $d*.* | sort -V`
+		do
+			# files
+			command="$command $i"
+		done
+
+		file="${d::-1}"
+		output="convert/$file.pdf"
+		command="$command $output"
+
+		#bash does not like () un-escaped
+		command=${command//(/"\("} 
+		command=${command//)/"\)"} 
+		
+		if eval $command
+		then
+		        echo "Sucessfully processed ${d::-1}"
+		else
+		        echo "Error occurred while processing ${d::-1}"
+		fi
+	fi
+done
